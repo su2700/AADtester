@@ -9,13 +9,15 @@ A simple PowerShell-based command-line tool to verify Azure AD (Microsoft Entra 
 - **Dependencies**: 
   - `Az.Accounts` module
   - `Az.Resources` module
+  - `Microsoft.Graph` module
 
 ## Building and Running
 
 ### Prerequisites
-Ensure you have the Azure PowerShell module installed:
+Ensure you have the required PowerShell modules installed:
 ```powershell
 Install-Module -Name Az -AllowClobber -Scope CurrentUser
+Install-Module -Name Microsoft.Graph -AllowClobber -Scope CurrentUser
 ```
 
 ### Running the Tool
@@ -24,9 +26,9 @@ Execute the script directly from PowerShell:
 .\aadtester.ps1
 ```
 The script will interactively prompt for:
-1. Admin User Principal Name (UPN)
-2. Admin Password
-3. Target User UPN to query
+1. **Option Selection**: Choose between Graph PowerShell module or REST API approach.
+2. **Admin Credentials**: UPN and Password.
+3. **Target User UPN** and (depending on option) **Group Name** or **RuleWord/Department**.
 
 ## Development Conventions
 
