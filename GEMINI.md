@@ -26,9 +26,12 @@ Execute the script directly from PowerShell:
 .\aadtester.ps1
 ```
 The script will interactively prompt for:
-1. **Option Selection**: Choose between Graph PowerShell module or REST API approach.
+1. **Option Selection**: 
+   - Option 1: Graph PowerShell Module (Update Department & Verify AU)
+   - Option 2: REST API approach (Full Group Test)
+   - Option 3: Dynamic Group Membership (Flag Hunter)
 2. **Admin Credentials**: UPN and Password.
-3. **Target User UPN** and (depending on option) **Group Name** or **RuleWord/Department**.
+3. **Target User UPN**, **Group Name**, and **RuleWord/Department** (depending on option).
 
 ## Development Conventions
 
