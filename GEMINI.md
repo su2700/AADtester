@@ -21,10 +21,13 @@ Install-Module -Name Microsoft.Graph -AllowClobber -Scope CurrentUser
 ```
 
 ### Running the Tool
-Execute the script directly from PowerShell:
+Execute either script directly from PowerShell:
 ```powershell
 .\aadtester.ps1
+# OR
+.\tenant-info.ps1
 ```
+#### `aadtester.ps1` (Multi-Purpose Tester)
 The script will interactively prompt for:
 1. **Option Selection**: 
    - Option 1: Graph PowerShell Module (Update Department & Verify AU)
@@ -32,6 +35,13 @@ The script will interactively prompt for:
    - Option 3: Dynamic Group Membership (Flag Hunter)
 2. **Admin Credentials**: UPN and Password.
 3. **Target User UPN**, **Group Name**, and **RuleWord/Department** (depending on option).
+
+#### `tenant-info.ps1` (Tenant & Federation Discovery)
+This lightweight tool uses public discovery endpoints to:
+1. **Prompt for a UPN** (No password or authentication required).
+2. **Output the Tenant/Brand Name**.
+3. **Show Federation Status** (Managed vs. Federated).
+4. **Note**: This script does not require the `Az` or `Microsoft.Graph` modules.
 
 ## Development Conventions
 

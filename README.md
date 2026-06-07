@@ -1,39 +1,74 @@
-# Azure AD Tester (CLI)
+# Azure AD & Entra ID Tester (CLI)
 
-A simple PowerShell-based command-line tool to verify Azure AD (Microsoft Entra ID) connectivity and query user information.
+A set of PowerShell-based tools to verify Azure AD (Microsoft Entra ID) connectivity, discover tenant metadata, and validate accounts.
 
 ## Overview
 
-This tool allows you to:
-- Authenticate with Azure using administrator credentials.
-- Retrieve and display comprehensive details for a specific user in the directory.
-- Verify that your environment can successfully connect to Azure AD services via the PowerShell `Az` module.
+This project provides two primary utilities for interacting with and investigating Entra ID environments:
 
-## Prerequisites
+1.  **`aadtester.ps1`**: An authenticated tool for administrators to manage users, verify Administrative Units, and test Dynamic Group memberships.
+2.  **`tenant-info.ps1`**: A password-less discovery utility that retrieves comprehensive tenant metadata and validates account existence using public Microsoft endpoints.
 
-- **PowerShell**: Windows PowerShell 5.1 or PowerShell Core 6+.
-- **Azure PowerShell Module**: You must have the `Az` module installed. You can install it by running the following command in an elevated PowerShell session:
+---
 
-  ```powershell
-  Install-Module -Name Az -AllowClobber -Scope CurrentUser
-  ```
+## 🛠 Tools
 
-## Usage
+### 1. Tenant Discovery Utility (`tenant-info.ps1`)
+A lightweight, non-authenticated tool for reconnaissance and environment validation.
 
-1.  Clone or download this repository.
-2.  Open a PowerShell terminal and navigate to the project directory.
-3.  Run the script:
+*   **Capabilities**:
+    *   **Account Validation**: Verifies if a UPN exists using `GetCredentialType`.
+    *   **Security Insights**: Identifies if an account is managed, has a password, and its domain type.
+    *   **Tenant Metadata**: Retrieves Tenant Brand Name and Federation Status (Managed vs. Federated).
+    *   **Advanced Discovery**: Extracts the **Tenant ID (GUID)** and Regional Scope via OpenID Configuration.
+*   **Usage**:
+    ```powershell
+    .\tenant-info.ps1
+    ```
+*   **No Dependencies**: Does not require `Az` or `Microsoft.Graph` modules.
+
+### 2. Multi-Purpose Tester (`aadtester.ps1`)
+An authenticated tool for deeper directory interaction.
+
+*   **Capabilities**:
+    *   **Update Department**: Modify user attributes to trigger dynamic group rules.
+    *   **Verify AU**: Check Administrative Unit memberships.
+    *   **REST & Graph Testing**: Validates API connectivity and dynamic group sync status.
+*   **Usage**:
     ```powershell
     .\aadtester.ps1
     ```
-4.  Follow the interactive prompts:
-    - **Admin User Principal ID**: The UPN (email) of an account with directory read permissions.
-    - **Admin Password**: The password for the admin account.
-    - **Target User Principal ID**: The UPN of the user you want to query.
+*   **Dependencies**: Requires `Az` and `Microsoft.Graph` modules.
 
-## Features
+---
 
-- **Forced Module Loading**: Automatically imports necessary `Az` modules with `-Force` to prevent DLL conflicts.
-- **Session Cleanup**: Clears existing Azure contexts before starting to ensure a clean connection.
-- **Detailed Output**: Displays all available attributes for the target user.
-- **Error Handling**: Provides clear feedback if authentication fails or the user is not found.
+## 🚀 Prerequisites
+
+### For `tenant-info.ps1`
+- **PowerShell**: Windows PowerShell 5.1 or PowerShell Core 6+.
+- **Internet Access**: Must be able to reach `login.microsoftonline.com`.
+
+### For `aadtester.ps1`
+- **Modules**: Install the required PowerShell modules:
+  ```powershell
+  Install-Module -Name Az -AllowClobber -Scope CurrentUser
+  Install-Module -Name Microsoft.Graph -AllowClobber -Scope CurrentUser
+  ```
+
+---
+
+## 📋 Analysis Interpretation (Discovery Tool)
+
+When using `tenant-info.ps1`, the output provides key security indicators:
+
+- **IfExistsResult: 0**: The account is **REAL and VALID**.
+- **HasPassword: true**: The account supports traditional password authentication.
+- **IsUnmanaged: false**: The account is governed by a corporate tenant (Managed).
+- **Tenant ID**: The unique GUID identifying the organization's directory.
+- **Federation Status**: Indicates if the tenant uses standard Azure authentication (Managed) or an external provider like AD FS or Okta (Federated).
+
+## Development Conventions
+
+- **Security First**: Discovery tools use public-facing endpoints and require no credentials.
+- **Clean Sessions**: Scripts automatically clear existing Azure contexts to ensure reliable results.
+- **Verbose Feedback**: Color-coded output for status, errors, and critical identifiers.
